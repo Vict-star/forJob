@@ -1,5 +1,67 @@
 # Q&A For Java
 
+## Hashmap相关
+
+[hashmap详解](https://blog.csdn.net/gududedabai/article/details/85631398)
+
+[JAVA HASHMAP的死循环](https://coolshell.cn/articles/9606.html)
+
+[HashMap之resize详解](https://blog.csdn.net/weixin_39667787/article/details/86678215)
+
+为什么hashmap扩容都是2倍数？  
+计算下标的函数逻辑为hash&(length-1),2的n次幂减一尾数都是1,减少碰撞。另外，当扩容时，可以由首位的变化很方便地确认下标是否变化。
+
+```java
+static int indexFor(int h, int length) {
+        // assert Integer.bitCount(length) == 1 : "length must be a non-zero power of 2";
+        return h & (length-1);
+    }
+```
+
+resize()的过程？  
+
+为什么扩容因子是0.75？ 
+根据统计学的结果, hash冲突是符合泊松分布的, 而冲突概率最小的是在7-8之间, 都小于百万分之一了
+
+## stackOverflow
+
+[StackOverFlowError 常见原因及解决方法](https://www.imooc.com/article/details/id/291031)
+
+产生原因
+
+JVM 线程栈存储了方法的执行过程、基本数据类型、局部变量、对象指针和返回值等信息，这些都需要消耗内存。一旦线程栈的大小增长超过了允许的内存限制，就会抛出 java.lang.StackOverflowError 错误。
+
+常见原因
+
+1. 无限递归调用
+2. 执行了大量方法，导致栈空间耗尽
+3. 方法内声明了海量的局部变量
+4. native 代码有栈上分配的逻辑，并且要求的内存还不小，比如 java.net.SocketInputStream.read0 会在栈上要求分配一个 64KB 的缓存（64位 Linux）
+
+## OOM
+
+[java中内存泄露8种情况的总结](https://blog.csdn.net/weter_drop/article/details/89387564)
+
+[什么是OOM，为什么会OOM及一些解决方法](https://blog.csdn.net/qq_42447950/article/details/81435080)
+
+原因：
+
+1）分配的少了：比如虚拟机本身可使用的内存（一般通过启动时的VM参数指定）太少。
+
+2）应用用的太多，并且用完没释放，浪费了。此时就会造成内存泄露或者内存溢出。
+
+**内存溢出**：申请的内存超出了JVM能提供的内存大小，此时称之为溢出。
+
+**内存泄露**：申请使用完的内存没有释放，导致虚拟机不能再次使用该内存，此时这段内存就泄露了，因为申请者不用了，而又不能被虚拟机分配给别人用。
+
+1. 静态集合类中的引用未释放(不使用时应该设置为null)
+2. 各种连接，如数据库连接、网络连接和IO连接等使用完未close
+3. 变量不合理的作用域：一般而言，一个变量的定义的作用范围大于其使用范围，很有可能会造成内存泄漏。另一方面，如果没有及时地把对象设置为null，很有可能导致内存泄漏的发生。
+4. 内部类持有外部类
+5. 改变哈希值：存入散列表的对象不该改变其哈希值，否则导致内存泄露
+6. 缓存泄露
+7. 监听器和回调
+
 ## GC算法种类
 
 Serial：使用复制算法，单线程，会暂停其他所有工作进程，效率高。年轻代收集算法，适用于小型应用。
@@ -86,21 +148,20 @@ CMS算法是JVM中**老年代**常用的垃圾回收算法，全称是Concurrent
 
 ## HashMap原理jdk7和jdk8的区别
 
-[参考文章](https://blog.csdn.net/zshake/article/details/40956065?locationNum=6&fps=1)
+[参考文章](https://blog.csdn.net/fst438060684/article/details/86499840)
 
-1、实现方式：
+1、实现方式  
 jdk7中使用数组+链表来实现，jdk8使用的数组+链表+红黑树
-
-2、新节点插入到链表是的插入顺序不同
-
+2、新节点插入到链表的插入顺序不同  
+头插法（并发情况下会导致循环引用问题）和尾插法
 3、jdk8的hash算法有所简化
-
 4、扩容机制有所优化
 
-## 线程池相关
+## 线程池
+
+[Java并发编程：线程池的使用](https://www.cnblogs.com/dolphin0520/p/3932921.html)
 
 为什么使用线程池？线程池的参数怎么设置？
-[Java并发编程：线程池的使用](https://www.cnblogs.com/dolphin0520/p/3932921.html)
 
 ## 可重入锁和不可重入锁
 
@@ -293,7 +354,6 @@ SSL/TLS协议的基本过程
 （2） 双方协商生成"对话密钥"。
 （3） 双方采用"对话密钥"进行加密通信。
 上面过程的前两步，又称为"握手阶段"（handshake）
-
 
 ## 进程同步机制
 
