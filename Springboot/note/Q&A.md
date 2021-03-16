@@ -1,5 +1,15 @@
 # Q&A springboot
 
+## AOP源码实现
+
+java动态代理？
+
+Bean的生命周期
+
+springboot的生命周期
+
+[Springboot AOP源码讲解](https://www.bilibili.com/video/BV1LA411J7nE?p=4&spm_id_from=pageDriver)
+
 ## jwt验证相关
 
 [Springboot使用jwt](https://www.jianshu.com/p/e88d3f8151db)
