@@ -1,5 +1,9 @@
 # Q&A springboot
 
+## Springboot和SpringMVC的关系
+
+[参考文章](https://www.php.cn/java/base/462210.html)
+
 ## AOP相关
 
 ### AOP的使用
@@ -30,6 +34,10 @@
 [SpringBoot启动流程解析](https://www.cnblogs.com/trgl/p/7353782.html)
 
 ![alt springboot启动流程](springboot启动流程.png)
+
+[Bean的生命周期](https://www.cnblogs.com/zrtqsk/p/3735273.html)
+
+[SpringBoot2 | SpringBoot启动流程源码分析（一）](https://blog.csdn.net/woshilijiuyi/article/details/82219585)
 
 ## jwt验证相关
 
