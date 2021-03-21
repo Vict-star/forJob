@@ -1,5 +1,17 @@
 # Q&A For Java
 
+## Java修饰符关键字
+
+![java修饰符](java修饰符关键字.png)
+
+## String、StringBuffer、StringBuilder区别
+
+[参考文章](https://blog.csdn.net/mad1989/article/details/26389541/)
+
+StringBuffer、StringBuilder和String一样，也用来代表字符串。String类是不可变类，任何对String的改变都 会引发新的String对象的生成；StringBuffer则是可变类，任何对它所指代的字符串的改变都不会产生新的对象。既然可变和不可变都有了，为何还有一个StringBuilder呢？相信初期的你，在进行append时，一般都会选择StringBuffer吧！
+
+先说一下集合的故事，HashTable是线程安全的，很多方法都是synchronized方法，而HashMap不是线程安全的，但其在单线程程序中的性能比HashTable要高。StringBuffer和StringBuilder类的区别也是如此，他们的原理和操作基本相同，区别在于StringBufferd支持并发操作，线性安全的，适 合多线程中使用。StringBuilder不支持并发操作，线性不安全的，不适合多线程中使用。新引入的StringBuilder类不是线程安全的，但其在单线程中的性能比StringBuffer高。
+
 ## Java动态代理
 
 [java动态代理实现与原理详细分析](https://www.cnblogs.com/gonjan-blog/p/6685611.html)
@@ -81,29 +93,29 @@ JVM 线程栈存储了方法的执行过程、基本数据类型、局部变量�
 **内存泄露**：申请使用完的内存没有释放，导致虚拟机不能再次使用该内存，此时这段内存就泄露了，因为申请者不用了，而又不能被虚拟机分配给别人用。
 
 1. 静态集合类中的引用未释放(不使用时应该设置为null)
-2. 各种连接，如数据库连接、网络连接和IO连接等使用完未close
-3. 变量不合理的作用域：一般而言，一个变量的定义的作用范围大于其使用范围，很有可能会造成内存泄漏。另一方面，如果没有及时地把对象设置为null，很有可能导致内存泄漏的发生。
-4. 内部类持有外部类
-5. 改变哈希值：存入散列表的对象不该改变其哈希值，否则导致内存泄露
+2. 改变哈希值：存入散列表的对象不该改变其哈希值，否则导致内存泄露
+3. 各种连接，如数据库连接、网络连接和IO连接等使用完未close
+4. 变量不合理的作用域：一般而言，一个变量的定义的作用范围大于其使用范围，很有可能会造成内存泄漏。另一方面，如果没有及时地把对象设置为null，很有可能导致内存泄漏的发生。
+5. 内部类持有外部类
 6. 缓存泄露
 7. 监听器和回调
 
 ## GC算法种类
 
-Serial：使用复制算法，单线程，会暂停其他所有工作进程，效率高。年轻代收集算法，适用于小型应用。
-Parallel：使用复制算法，吞吐量优先，适合后台运算缺少交互的任务。
-CMS收集器：使用"标记-清除算法"，响应时间优先，减少垃圾收集停顿时间，适用于服务器、电信领域等。
-G1收集器：
-
-[Serial,Parallel,CMS,G1四大GC收集器特点小结](https://blog.csdn.net/u013812939/article/details/48782343)
-
-[Serial收集器介绍](https://blog.csdn.net/weixin_44568697/article/details/109026412)
-
-[Parallel 收集器](https://blog.csdn.net/sunwei_pyw/article/details/70114792)
-
+[GC（G1算法）](https://blog.csdn.net/youyou1543724847/article/details/52728244)  
+[Serial,Parallel,CMS,G1四大GC收集器特点小结](https://blog.csdn.net/u013812939/article/details/48782343)  
+[Serial收集器介绍](https://blog.csdn.net/weixin_44568697/article/details/109026412)  
+[Parallel 收集器](https://blog.csdn.net/sunwei_pyw/article/details/70114792)  
 [G1收集器的收集原理](https://www.cnblogs.com/lsgxeva/p/10231201.html)
 
+- Serial：使用复制算法，单线程，会暂停其他所有工作进程，效率高。年轻代收集算法，适用于小型应用。  
+- Parallel：使用复制算法，吞吐量优先，适合后台运算缺少交互的任务。  
+- CMS收集器：使用"标记-清除算法"，响应时间优先，减少垃圾收集停顿时间，适用于服务器、电信领域等。  
+- G1收集器: young GC、mix GC
+
 ## CMS(Concurrent Mark Sweep并发标记清除)算法
+
+[GC算法之CMS算法](https://blog.csdn.net/zy1994hyq/article/details/102495305)
 
 CMS算法是JVM中**老年代**常用的垃圾回收算法，全称是Concurrent Mark Sweep算法，即并发标记-清除算法。算法的执行步骤如下图所示，共有六个步骤。
 
@@ -114,17 +126,22 @@ CMS算法是JVM中**老年代**常用的垃圾回收算法，全称是Concurrent
 1. 初步标记：触发Stop the world事件、标记与GCroot直接相连的的对象，以及被存活的青年代对象所引用的对象。
 2. 并发标记：逐步标记步骤1中引用的对象，受老年代引用改变的影响。
 3. 并发预处理：标记"脏块"(引用对象改变)、新进入老年代的对象，减少下一阶段重标记的工作量。
-4. 重标记：触发Stop the world事件，收集器线程扫描在CMS堆中剩余的对象。扫描从"跟对象"开始向下追溯，并处理对象关联。
+4. 重标记：触发Stop the world事件，收集器线程扫描在CMS堆中剩余的对象。扫描从"根对象"开始向下追溯，并处理对象关联。
 5. 并发清理：并发清理垃圾对象。
 6. 并发重置：重置CMS收集器的数据结构，等待下一次的垃圾回收
 
-[GC算法之CMS算法](https://blog.csdn.net/zy1994hyq/article/details/102495305)
-
 ## 线程池相关
 
-![alt 线程池参数设置](线程池参数设置.png)
+[线程池之ThreadPoolExecutor概述](https://www.jianshu.com/p/c41e942bcd64)  
+[线程池之ThreadPoolExecutor使用](https://www.jianshu.com/p/f030aa5d7a28)  
+[线程池](https://www.jianshu.com/p/f030aa5d7a28)  
+[队列、抛弃策略](https://blog.csdn.net/mulinsen77/article/details/88987066)  
+[Java并发编程：线程池的使用](https://www.cnblogs.com/dolphin0520/p/3932921.html)
 
+![alt 线程池参数设置](线程池参数设置.png)  
 ![alt 线程任务处理流程](线程任务处理流程.png)
+
+为什么使用线程池？线程池的参数怎么设置？
 
 ### 队列策略
 
@@ -141,6 +158,14 @@ CMS算法是JVM中**老年代**常用的垃圾回收算法，全称是Concurrent
 
 ### ArrayBlockingQueue和linkedBlockingQueue的区别
 
+[参考文章](https://www.cnblogs.com/silyvin/p/9106628.html)  
+
+1. 队列大小
+2. 存储容器：数组、队列
+3. 链表会生成和销毁弄得，对GC有所影响
+4. 实现队列添加或移除的锁不一样
+5. 两者的size都是强一致的。但是实现有区别，Array～使用全局锁      Linked～使用原子变量实现。
+
 ### 预定义线程池的种类
 
 - FixedThreadPool：1. 全是核心线程 2. 使用LinkedBlockingQueue,无界阻塞队列 3. 无序执行任务
@@ -148,25 +173,33 @@ CMS算法是JVM中**老年代**常用的垃圾回收算法，全称是Concurrent
 - SingleThreadExecutor：单一线程，无界阻塞队列
 - ScheduledThreadPool：定时调度任务线程池
 
-[线程池之ThreadPoolExecutor概述](https://www.jianshu.com/p/c41e942bcd64)
-
-[线程池之ThreadPoolExecutor使用](https://www.jianshu.com/p/f030aa5d7a28)
-
-[线程池](https://www.jianshu.com/p/f030aa5d7a28)
-
-[队列、抛弃策略](https://blog.csdn.net/mulinsen77/article/details/88987066)
-
-[深入理解scheduledthreadpoolexecutor](https://www.jianshu.com/p/1cc47cfd355d)
-
 ## final,finally,finalize的区别
 
 [参考文章](https://blog.csdn.net/qq_38542085/article/details/90913810)
 
-## JMM
+- final用于声明属性，方法和类，分别表示属性不可交变，方法不可覆盖，类不可继承。
+- finally是异常处理语句结构的一部分，表示总是执行。
+- finalize是Object类的一个方法，在垃圾收集器执行的时候会调用被回收对象的此方法，供垃圾收集时的其他资源回收，例如关闭文件等。
+
+## JMM相关
+
+[深入理解java内存模型](http://ifeve.com/java-memory-model-0/)
 
 ![alt JMM内存屏障](JMM内存屏障.png)
 
-[深入理解java内存模型](http://ifeve.com/java-memory-model-0/)
+JVM特性：原子性、可见性、有序性
+
+happens-before原则、as-if-serial
+
+volatile的底层原理,valatile读写时增加的屏障、优化
+
+![alt volatile读](volatile读.png)  
+![alt volatile写](volatile写.png)  
+![alt volatile读写优化](volatile读写优化.png)  
+
+final的底层原理
+
+锁的底层原理(ReentrantLock)
 
 ## java集合介绍（List，Set，Map）
 
@@ -176,18 +209,12 @@ CMS算法是JVM中**老年代**常用的垃圾回收算法，全称是Concurrent
 
 [参考文章](https://blog.csdn.net/fst438060684/article/details/86499840)
 
-1、实现方式  
+1. 实现方式  
 jdk7中使用数组+链表来实现，jdk8使用的数组+链表+红黑树
-2、新节点插入到链表的插入顺序不同  
+2. 新节点插入到链表的插入顺序不同  
 头插法（并发情况下会导致循环引用问题）和尾插法
-3、jdk8的hash算法有所简化
-4、扩容机制有所优化
-
-## 线程池
-
-[Java并发编程：线程池的使用](https://www.cnblogs.com/dolphin0520/p/3932921.html)
-
-为什么使用线程池？线程池的参数怎么设置？
+3. jdk8的hash算法有所简化
+4. 扩容机制有所优化: 扩容复制数据时，由hash&(length-1)的最高位是否为1判断是否要移动位置。
 
 ## 可重入锁和不可重入锁
 
