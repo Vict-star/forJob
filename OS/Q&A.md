@@ -1,5 +1,13 @@
 # Q&A for OPsystem
 
+## 虚拟内存映射
+
+## 内存、映射
+
+## 进程间通信
+
+## 死锁
+
 ## 线程的状态
 
 新建（new）、就绪（runningable）、开始（running）、阻塞（block）、死亡（dead）
